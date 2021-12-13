@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    //button number action
     fun numberAction(view: View) {
 
         if (view is Button){
 
+            // add a decimal number
             if (view.text == "."){
                 if (canAddDecimal)
                     inputTV.append(view.text)//add to inputTV the "." decimal
@@ -27,30 +29,34 @@ class MainActivity : AppCompatActivity() {
             }
             else
                 inputTV.append(view.text) //add to inputTV the text from which button is clicked ex: button 9
-            canAddOperation = true
+                canAddOperation = true
         }
     }
 
+    //button operator action
     fun operationAction(view: View) {
         if (view is Button && canAddOperation){
-            inputTV.append(view.text) //add to input text the text from which button is clicked ex: button +
+            inputTV.append(view.text) //add to inputTV the text from which button is clicked ex: button +
             canAddOperation = false
             canAddDecimal = true
         }
     }
 
+    //button clear action
     fun allClearAction(view: View) {
         inputTV.text = ""
         resultsTV.text = ""
     }
 
+    //button backspace action
     fun backSpaceAction(view: View) {
-        val  lenght = inputTV.length()
-        if (lenght > 0 ){
-            inputTV.text = inputTV.text.subSequence(0, lenght-1)
+        val  length = inputTV.length()
+        if (length > 0 ){
+            inputTV.text = inputTV.text.subSequence(0, length-1)
         }
     }
 
+    //button equals action
     fun equalsAction(view: View) {
         resultsTV.text = calculateResults()
     }
@@ -67,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         return result.toString()
     }
 
+    //fun that calculate + an -
     private fun addSubtractCalculate(passedList: MutableList<Any>): Float {
         var result = passedList[0] as Float
 
@@ -85,8 +92,10 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
+    //fun that calculate * and / first
     private fun timesDivisionCalculate(passedList: MutableList<Any>): MutableList<Any> {
         var list = passedList
+
         while (list.contains('x') || list.contains('/')){
             list = calcTimesDiv(list)
         }
@@ -119,6 +128,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            //just for calculate separately each times and division operation. ex: input 9*3/7
+            // fun timesDivisionCalculate will reapet while existing * and / operators,
+            //and solve them one by one, like in this example first 9*3 = 27 and then 27/7
             if (i > restartIndex) {
                 newList.add(passedList[i])
             }
@@ -132,16 +144,20 @@ class MainActivity : AppCompatActivity() {
         var currentDigit = ""
 
         for (character in inputTV.text){
+
+            //this "if" add a integer or decimal number to var currentDigit
             if(character.isDigit() || character == '.' ){
                 currentDigit += character
             }
+            //else add others characters like +, -, * and /
             else {
-                list.add(currentDigit.toFloat())
-                currentDigit = ""
-                list.add(character)
+                list.add(currentDigit.toFloat()) //Firstly add currentDigit(number) before operation character
+                currentDigit = "" //cleaning currentDigit
+                list.add(character) //add operation character
             }
         }
 
+        // if the last character of inputTv was a number(currentDigit in the last indice != ""), this "if" add this to the val list
         if (currentDigit != ""){
             list.add(currentDigit.toFloat())
         }
